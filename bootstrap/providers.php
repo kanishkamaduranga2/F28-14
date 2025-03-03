@@ -3,5 +3,6 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\TenancyServiceProvider::class, // <- add tenancy provider
+    App\Providers\Filament\MasterPanelProvider::class,
+    App\Providers\TenancyServiceProvider::class,
 ];
