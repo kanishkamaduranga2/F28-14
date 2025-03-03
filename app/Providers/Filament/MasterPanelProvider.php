@@ -17,6 +17,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class MasterPanelProvider extends PanelProvider
 {
@@ -25,6 +27,7 @@ class MasterPanelProvider extends PanelProvider
         return $panel
             ->id('master')
             ->path('master')
+            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
