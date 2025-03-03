@@ -7,11 +7,15 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Features\SupportFileUploads\FilePreviewController;
+use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Resolvers\DomainTenantResolver;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -99,6 +103,23 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
+        // enable cache
+        DomainTenantResolver::$shouldCache = true;
+
+        // seconds, 3600 is the default value
+        DomainTenantResolver::$cacheTTL = 3600;
+
+        FilePreviewController::$middleware = ['web', InitializeTenancyByDomain::class];
+
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware(
+                    'web',
+                    InitializeTenancyByDomain::class // or whatever tenancy middleware you use
+                );
+        });
+
         $this->bootEvents();
         $this->mapRoutes();
 
