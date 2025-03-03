@@ -37,6 +37,11 @@ class CreateTenant extends Command
         $email = $this->option('email');
         $password = $this->option('password');
 
+        if (!$email || !$password) {
+            $this->error('Email and password are required to create a super admin user.');
+            return;
+        }
+
         // Create the tenant
         $tenant = Tenant::create(['id' => $tenantId]);
 
