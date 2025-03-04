@@ -103,7 +103,6 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
-
         // enable cache
         DomainTenantResolver::$shouldCache = true;
 
@@ -112,13 +111,16 @@ class TenancyServiceProvider extends ServiceProvider
 
         FilePreviewController::$middleware = ['web', InitializeTenancyByDomain::class];
 
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle)
-                ->middleware(
-                    'web',
-                    InitializeTenancyByDomain::class // or whatever tenancy middleware you use
-                );
-        });
+        if (! app()->runningInConsole() && ! in_array(request()->getHost(), config('tenancy.central_domains'))) {
+
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware(
+                        'web',
+                        InitializeTenancyByDomain::class // or whatever tenancy middleware you use
+                    );
+            });
+        }
 
         $this->bootEvents();
         $this->mapRoutes();
