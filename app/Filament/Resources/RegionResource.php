@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BankResource\Pages;
-use App\Filament\Resources\BankResource\RelationManagers;
-use App\Models\Bank;
+use App\Filament\Resources\RegionResource\Pages;
+use App\Filament\Resources\RegionResource\RelationManagers;
+use App\Models\Region;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,25 +13,26 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BankResource extends Resource
+class RegionResource extends Resource
 {
-    protected static ?string $model = Bank::class;
+    protected static ?string $model = Region::class;
 
     protected static ?string $navigationGroup = 'Basic Notes'; // Group under "Basic Notes"
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Icon for the resource
+    protected static ?string $navigationLabel = 'Regions'; // Sub-link label
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('bank_code')
-                    ->label('Bank Code')
+                Forms\Components\TextInput::make('p_code')
+                    ->label('PCode')
                     ->required()
                     ->maxLength(50),
-                Forms\Components\TextInput::make('bank')
-                    ->label('Bank Name')
+                Forms\Components\TextInput::make('p_name')
+                    ->label('PName')
                     ->required()
-                    ->maxLength(150),
+                    ->maxLength(255),
             ]);
     }
 
@@ -39,22 +40,19 @@ class BankResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('bank_code')
-                    ->label('Bank Code')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('p_code')
+                    ->label('PCode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bank')
-                    ->label('Bank Name')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('p_name')
+                    ->label('PName')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->modal(),
-                Tables\Actions\DeleteAction::make(), // Add delete action
+                Tables\Actions\EditAction::make()->modal(), // Edit action in modal
+                Tables\Actions\DeleteAction::make(), // Delete action
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -73,7 +71,7 @@ class BankResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBanks::route('/'),
+            'index' => Pages\ListRegions::route('/'),
         ];
     }
 }
