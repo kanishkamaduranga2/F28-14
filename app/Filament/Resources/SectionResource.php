@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BankResource\Pages;
-use App\Filament\Resources\BankResource\RelationManagers;
-use App\Models\Bank;
+use App\Filament\Resources\SectionResource\Pages;
+use App\Filament\Resources\SectionResource\RelationManagers;
+use App\Models\Section;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,25 +13,26 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BankResource extends Resource
+class SectionResource extends Resource
 {
-    protected static ?string $model = Bank::class;
+    protected static ?string $model = Section::class;
 
     protected static ?string $navigationGroup = 'Basic Notes'; // Group under "Basic Notes"
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Icon for the resource
+    protected static ?string $navigationLabel = 'Sections'; // Sub-link label
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack'; // Icon for the resource
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('bank_code')
-                    ->label('Bank Code')
+                Forms\Components\TextInput::make('section_number')
+                    ->label('Section Number')
                     ->required()
                     ->maxLength(50),
-                Forms\Components\TextInput::make('bank')
-                    ->label('Bank Name')
+                Forms\Components\TextInput::make('section_name')
+                    ->label('Section Name')
                     ->required()
-                    ->maxLength(150),
+                    ->maxLength(255),
             ]);
     }
 
@@ -39,21 +40,18 @@ class BankResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('bank_code')
-                    ->label('Bank Code')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('section_number')
+                    ->label('Section Number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bank')
-                    ->label('Bank Name')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('section_name')
+                    ->label('Section Name')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->modal(),
+                Tables\Actions\EditAction::make()->modal(),
                 Tables\Actions\DeleteAction::make(), // Add delete action
             ])
             ->bulkActions([
@@ -73,7 +71,7 @@ class BankResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBanks::route('/'),
+            'index' => Pages\ListSections::route('/'),
         ];
     }
 }
