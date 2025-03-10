@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('department_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('department_id')->constrained('departments')->onDelete('cascade'); // Foreign key to departments table
+            $table->string('department_category_number', 50); // Department category number
+            $table->string('department_category_name'); // Department category name
+
             $table->timestamps();
         });
     }
