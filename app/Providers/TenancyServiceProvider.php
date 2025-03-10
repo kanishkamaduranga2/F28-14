@@ -16,6 +16,7 @@ use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Resolvers\DomainTenantResolver;
+use Illuminate\Support\Facades\Log;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -96,31 +97,30 @@ class TenancyServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
-    {
-        //
-    }
-
     public function boot()
     {
-
-        // enable cache
+        // Enable cache
         DomainTenantResolver::$shouldCache = true;
 
-        // seconds, 3600 is the default value
+        // Seconds, 3600 is the default value
         DomainTenantResolver::$cacheTTL = 3600;
 
         FilePreviewController::$middleware = ['web', InitializeTenancyByDomain::class];
 
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle)
-                ->middleware(
-                    'web',
-                    InitializeTenancyByDomain::class // or whatever tenancy middleware you use
-                );
-        });
+        if (! app()->runningInConsole() && ! in_array(request()->getHost(), config('tenancy.central_domains'))) {
+
+            // Set the Livewire update route with tenancy middleware
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware([
+                        'web',
+                        InitializeTenancyByDomain::class, // Add tenancy middleware
+                    ]);
+            });
+        }
 
         $this->bootEvents();
+
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
