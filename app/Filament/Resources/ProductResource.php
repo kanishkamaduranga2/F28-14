@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Tables\Columns\TenantAwareImageColumn;
 
 class ProductResource extends Resource
 {
@@ -47,9 +49,10 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->label('Product Name'),
-                Forms\Components\FileUpload::make('logo')
+                SpatieMediaLibraryFileUpload::make('logo')
                     ->label('Product Logo')
-                    ->directory('products/logos') // Directory to store logos
+                    ->collection('logo') // Match the media collection name
+                    ->disk('tenant') // Use the tenant disk
                     ->image()
                     ->nullable(),
                 Forms\Components\Toggle::make('status')
@@ -62,6 +65,9 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable()
@@ -70,8 +76,10 @@ class ProductResource extends Resource
                     ->label('Product Name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('logo')
+                TenantAwareImageColumn::make('logo')
                     ->label('Logo')
+                    ->collection('logo')
+                  //  ->disk('tenant')
                     ->circular(),
                 Tables\Columns\IconColumn::make('status')
                     ->label('Status')
@@ -106,5 +114,12 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        $product = $this->getRecord();
+        $mediaUrl = $product->getFirstMediaUrl('logo');
+        $product->update(['logo' => $mediaUrl]);
     }
 }

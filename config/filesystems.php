@@ -30,6 +30,13 @@ return [
 
     'disks' => [
 
+        'tenant' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/tenant'),
+            'url' => env('APP_URL').'/storage/tenant',
+            'visibility' => 'public',
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),

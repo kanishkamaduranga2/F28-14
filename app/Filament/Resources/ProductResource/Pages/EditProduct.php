@@ -16,4 +16,11 @@ class EditProduct extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $product = $this->getRecord();
+        $mediaUrl = $product->getFirstMediaUrl('logo');
+        $product->update(['logo' => $mediaUrl]);
+    }
 }
