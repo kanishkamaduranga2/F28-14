@@ -17,7 +17,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        'mt.local',
+        'f28.local',
     ],
 
     /**
@@ -50,7 +50,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'mt_',
+        'prefix' => 'tenant_',
         'suffix' => '',
 
         /**
