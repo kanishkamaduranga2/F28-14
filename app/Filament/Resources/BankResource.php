@@ -25,7 +25,7 @@ class BankResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('bank_code')
-                    ->label('Bank Code')
+                    ->label(__('f28.bank_code'))
                     ->required()
                     ->maxLength(50),
                 Forms\Components\TextInput::make('bank')

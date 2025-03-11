@@ -20,6 +20,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Filament\Resources\ProductResource;
+use App\Filament\Widgets\LanguageSwitcher;
+use Filament\Navigation\UserMenuItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                LanguageSwitcher::class,
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])

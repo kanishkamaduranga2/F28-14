@@ -54,6 +54,13 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+
+    'available_locales' => [
+        'si' => 'Sinhala',
+        'ta' => 'Tamil',
+        'en' => 'English',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -65,7 +72,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'Asia/Colombo',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +85,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => 'si',
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
