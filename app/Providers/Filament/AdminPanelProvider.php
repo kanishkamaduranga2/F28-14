@@ -21,6 +21,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Filament\Resources\ProductResource;
 use App\Filament\Widgets\LanguageSwitcher;
+use App\Http\Middleware\SetLocale;
 use Filament\Navigation\UserMenuItem;
 
 class AdminPanelProvider extends PanelProvider
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetLocale::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

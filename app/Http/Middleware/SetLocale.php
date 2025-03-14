@@ -5,9 +5,20 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Services\LanguageService;
+
 
 class SetLocale
 {
+
+    protected $languageService;
+
+    public function __construct(LanguageService $languageService)
+    {
+        $this->languageService = $languageService;
+    }
+
+
     /**
      * Handle an incoming request.
      *
@@ -15,7 +26,10 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->session()->get('locale', config('app.locale'));
+        $locale = $this->languageService->getLocale();
+
+        \Log::info("Middleware Locale set  " .$locale );
+
         app()->setLocale($locale);
         return $next($request);
     }
