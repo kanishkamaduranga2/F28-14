@@ -13,8 +13,14 @@ class LanguageService
      */
     public function getLocale()
     {
+        $locale = 'si';
+        if (Session::has('locale')){
+            $locale = Session::get('locale');
+        } else {
+            $locale = config('app.locale');
+        }
 
-        return Session::get('locale', config( Auth::user()->locale,'app.locale'));
+        return $locale;
     }
 
     /**
